@@ -1,12 +1,12 @@
 // const express = require('express');//importing 3rd package
 // const { MongoClient } = require('mongodb');
 
-import  express  from 'express';
+import  express, { response }  from 'express';
 // import { MongoClient } from 'mongodb';
 
 const app = express();
 
-const PORT = 4000;
+const PORT = process.env.PORT;
 
 const movies = [
 
@@ -86,24 +86,32 @@ app.use(express.json());
   // const MONGO_URL = "mongodb://127.0.0.1"; //  nodejs - 16+
   const MONGO_URL=process.env.MONGO_URL;
   // Node - MongoDB
-  async function createConnection() {
+    async function createConnection() {
     const client = new MongoClient(MONGO_URL);
     await client.connect();
     console.log("Mongo is connected ✌😊");
     return client;
   }
-  
-  const client = await createConnection();
-  
 
-app.get('/', function (req, res) {
+  const client = await createConnection();
+
+  app.get('/', function (req, res) {
   res.send('Hello World')
 })
 
+
 app.get('/movies',async function (req, res) {
   //db.movies.find({});
-  const movie= await client.db("guvi-node-app").collection("movies").find().toArray();
-  console.log(movie)
+  if(req.query.rating){
+    req.query.rating=+req.query.rating;
+  }
+  const movie= await client
+  .db("guvi-node-app")
+  .collection("movies")
+  .find(req.query)
+  .toArray();
+  res.send(movie);
+  console.log(movie);
   
 })
 
@@ -111,12 +119,19 @@ app.get("/movies/:id", async function(request, response) {
   const { id } =request.params;
   console.log(id);
   console.log(request.params,id)
+ 
   // const movie=movies.find((mv)=>mv.id===id);
   //db.movies.findOne({id:101})
-  const movie= await client.db("guvi-node-app").collection("movies").findOne({id:id})
+
+  const movie= await client
+  .db("guvi-node-app")
+  .collection("movies")
+  .findOne({id:id});
+
   console.log(movie);
   movie ? response.send(movie) : response.status(404).send({msg:"movie not found"})
 }) 
+
 //middleware-express.json()--body->JSON (it is inbuilt middleware)
 app.post('/movies',  async function (req, res) {
   const data=req.body;
@@ -125,4 +140,35 @@ app.post('/movies',  async function (req, res) {
   const result=await client.db("guvi-node-app").collection("movies").insertMany(data);
   res.send(result);
 })
+
+app.put("/movies/:id",async function(req,res){
+  const {id}=req.params;
+  console.log(req.params,id);
+  const data=req.body;
+  //db.movies.updateOne({id:"101"},{set:data})
+  const result=await client
+  .db("guvi-node-app")
+  .collection("movies")
+  .updateOne({id:id},{$set:data});
+  res.send(result)
+})
+
+app.delete("/movies/:id", async function(request, response) {
+  const { id } =request.params;
+  console.log(id);
+  console.log(request.params,id)
+
+  //db.movies.deleteOne({id."101"})
+  const result= await client
+  .db("guvi-node-app")
+  .collection("movies")
+  .deleteOne({id:id})
+
+  console.log(result);
+  result.deletedCount>0
+  ? response.send({msg:"movie delete successfullu"})
+  :response.status(404).send({msg:"movie not found"})
+})
+
+
 app.listen(PORT,()=>console.log(`APP started ${PORT}`));
