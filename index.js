@@ -79,9 +79,12 @@ const movies = [
 app.use(express.json());
   
   import { MongoClient } from "mongodb";
-  const MONGO_URL = "mongodb://localhost";
+  import dotenv from "dotenv";
+
+  dotenv.config();
+  // const MONGO_URL = "mongodb://localhost";
   // const MONGO_URL = "mongodb://127.0.0.1"; //  nodejs - 16+
- 
+  const MONGO_URL=process.env.MONGO_URL;
   // Node - MongoDB
   async function createConnection() {
     const client = new MongoClient(MONGO_URL);
