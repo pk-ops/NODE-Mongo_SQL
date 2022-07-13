@@ -14,12 +14,12 @@ router.get('/', async function (request, response) {
       request.query.rating=+request.query.rating;
      
     }
-
+   
     console.log(request.query);
-    
+
     const movie= await getAllMovies(request)
     response.send(movie);
-    console.log(movie);
+   
     
   })
   
@@ -30,12 +30,12 @@ router.get('/', async function (request, response) {
    
     // const movie=movies.find((mv)=>mv.id===id);
     //db.movies.findOne({id:101})
-  
+    console.log(movie);
     const movie= await getMoviebyId(id);
   
     
     movie ? response.send(movie) : response.status(404).send({msg:"movie not found"})
-    console.log(movie);
+    
   }) 
   
   //middleware-express.json()--body->JSON (it is inbuilt middleware)
@@ -45,17 +45,18 @@ router.get('/', async function (request, response) {
     //db.movies.insertMany()
     const result=await createMovies(data);
     response.send(result);
-    console.log(result);
+    
   })
   
   router.put("/:id",async function(request,response){
     const {id}=request.params;
     console.log(request.params,id);
     const data=request.body;
+ 
     //db.movies.updateOne({id:"101"},{set:data})
     const result=await updateMoviesById(id, data);
     response.send(result);
-    console.log(result);
+  
   })
   
   router.delete("/:id", async function(request, response) {
