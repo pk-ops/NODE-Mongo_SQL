@@ -6,16 +6,19 @@ import { createMovies,
          getMoviebyId, 
          updateMoviesById } from "./helper.js";
 
-
 const router=express.Router();
 
-router.get('/',async function (req, res) {
-    //db.movies.find({});
-    if(req.query.rating){
-      req.query.rating=+req.query.rating;
+router.get('/', async function (request, response) {
+    // db.movies.find({});
+    if(request.query.rating){
+      request.query.rating=+request.query.rating;
+     
     }
-    const movie= await getAllMovies(req)
-    res.send(movie);
+
+    console.log(request.query);
+    
+    const movie= await getAllMovies(request)
+    response.send(movie);
     console.log(movie);
     
   })
@@ -42,6 +45,7 @@ router.get('/',async function (req, res) {
     //db.movies.insertMany()
     const result=await createMovies(data);
     response.send(result);
+    console.log(result);
   })
   
   router.put("/:id",async function(request,response){
@@ -50,7 +54,8 @@ router.get('/',async function (req, res) {
     const data=request.body;
     //db.movies.updateOne({id:"101"},{set:data})
     const result=await updateMoviesById(id, data);
-    response.send(result)
+    response.send(result);
+    console.log(result);
   })
   
   router.delete("/:id", async function(request, response) {

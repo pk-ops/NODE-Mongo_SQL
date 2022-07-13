@@ -23,13 +23,14 @@ export async function deleteMoviesById(id) {
     .insertMany(data);
   }
   
-  export async function getAllMovies(req) {
+  export async function getAllMovies(request) {
     return await client
 
       .db("guvi-node-app")
       .collection("movies")
-      .find(req.query)
+      .find(request.query)
       .toArray();
+      
   }
   
   export async function getMoviebyId(id) {
