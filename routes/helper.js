@@ -13,8 +13,6 @@ export async function deleteMoviesById(id) {
     return await client.db("guvi-node-app").collection("movies").insertMany(data);
   }
   
-  
-  
   export async function getMoviebyId(id) {
       return await client.db("guvi-node-app").collection("movies").findOne({ id: id });
     
