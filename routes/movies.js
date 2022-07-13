@@ -12,8 +12,7 @@ router.get('/', async function (request, response) {
     // db.movies.find({});
     if(request.query.rating){
       request.query.rating=+request.query.rating;
-     
-    }
+     }
    
     console.log(request.query);
 
