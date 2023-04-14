@@ -93,7 +93,7 @@ db.movies.find({},{_id:0,name:1,rating:1}).sort({rating:1}).pretty();
 db.movies.find({},{_id:0,name:1,rating:1}).sort({rating:-1}).pretty();
 
 
-db.movies.find({},{_id:0,name:1,rating:1}).sort({rating-1,name:1});
+// db.movies.find({},{_id:0,name:1,rating:1}).sort({rating-1,name:1});
 
 db.movies.insertOne({},{_id:"62c2be91abe106ff8c2b32c4",language:"english"})
 

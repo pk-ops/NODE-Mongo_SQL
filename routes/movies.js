@@ -1,4 +1,5 @@
 import express from "express";
+import { auth } from "../Middleware/auth.js";
 
 import { createMovies, 
          deleteMoviesById, 
@@ -8,7 +9,7 @@ import { createMovies,
 
 const router = express.Router();
 
-router.get('/', async function (request, response) {
+router.get('/',auth, async function (request, response) {
     // db.movies.find({});
     if(request.query.rating){
       request.query.rating=+request.query.rating;
@@ -18,8 +19,6 @@ router.get('/', async function (request, response) {
 
     const movie= await getAllMovies(request)
     response.send(movie);
-   
-    
   })
   
   router.get("/:id", async function(request, response) {
@@ -29,10 +28,9 @@ router.get('/', async function (request, response) {
    
     // const movie=movies.find((mv)=>mv.id===id);
     //db.movies.findOne({id:101})
-    
+
     const movie= await getMoviebyId(id);
-  
-    
+      
     movie ? response.send(movie) : response.status(404).send({msg:"movie not found"})
     console.log(movie);
   }) 
@@ -58,7 +56,7 @@ router.get('/', async function (request, response) {
   
   })
   
-  router.delete("/:id", async function(request, response) {
+  router.delete("/:id",auth, async function(request, response) {
     const { id } =request.params;
     console.log(id);
     console.log(request.params,id)
